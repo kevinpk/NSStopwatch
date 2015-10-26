@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +16,63 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Seconds" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8a-yL-hNJ">
+                                <rect key="frame" x="181" y="93" width="238" height="110"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="238" id="Igb-ce-sA8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dh8-nC-bTV">
+                                <rect key="frame" x="216" y="238" width="169" height="80"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="169" id="c3X-7Q-Fat"/>
+                                    <constraint firstAttribute="height" constant="80" id="rHd-IR-qUz"/>
+                                </constraints>
+                                <state key="normal" title="Start/Finish"/>
+                                <connections>
+                                    <action selector="startPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xiF-3c-r3F"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SKc-z9-ptz">
+                                <rect key="frame" x="216" y="362" width="169" height="80"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="PJo-wv-fbB"/>
+                                </constraints>
+                                <state key="normal" title="Pause/Resume"/>
+                                <connections>
+                                    <action selector="pausePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="orn-T3-yui"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="dh8-nC-bTV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="G1M-80-Stp"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="SKc-z9-ptz" secondAttribute="bottom" constant="158" id="Rsz-9W-UPW"/>
+                            <constraint firstItem="dh8-nC-bTV" firstAttribute="top" secondItem="E8a-yL-hNJ" secondAttribute="bottom" constant="35" id="UFy-lC-4l8"/>
+                            <constraint firstItem="E8a-yL-hNJ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="73" id="aMP-SE-G4X"/>
+                            <constraint firstItem="dh8-nC-bTV" firstAttribute="trailing" secondItem="SKc-z9-ptz" secondAttribute="trailing" id="fQe-qE-Mkh"/>
+                            <constraint firstItem="dh8-nC-bTV" firstAttribute="leading" secondItem="SKc-z9-ptz" secondAttribute="leading" id="kjZ-oH-lyz"/>
+                            <constraint firstItem="E8a-yL-hNJ" firstAttribute="centerX" secondItem="dh8-nC-bTV" secondAttribute="centerX" id="njE-vf-iTI"/>
+                            <constraint firstItem="SKc-z9-ptz" firstAttribute="top" secondItem="dh8-nC-bTV" secondAttribute="bottom" constant="44" id="ovs-1j-b3J"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="pauseResume" destination="SKc-z9-ptz" id="KQl-WW-jvI"/>
+                        <outlet property="secondsLabel" destination="E8a-yL-hNJ" id="XsV-bm-LFJ"/>
+                        <outlet property="startStop" destination="dh8-nC-bTV" id="qwr-M7-PHQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="305" y="429"/>
         </scene>
     </scenes>
 </document>

@@ -8,7 +8,15 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController (){
+    NSTimer *stopTimer;
+    NSDate *startDate;
+    BOOL running;
+    BOOL paused;
+}
+@property (weak, nonatomic) IBOutlet UILabel *secondsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *startStop;
+@property (weak, nonatomic) IBOutlet UIButton *pauseResume;
 
 @end
 
@@ -17,11 +25,74 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [_startStop setTitle:@"Start" forState:UIControlStateNormal];
+    [_startStop setEnabled:true];
+    [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
+    [_pauseResume setEnabled:false];
+    _secondsLabel.text = @"00:00:00";
+    running = FALSE;
+    paused = false;
+}
+- (IBAction)startPressed:(id)sender {
+    if(!running){
+        startDate = [NSDate date];
+        running = TRUE;
+        [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
+        [_startStop setEnabled:false];
+        [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
+        [_pauseResume setEnabled:true];
+        if (stopTimer == nil) {
+            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/10.0
+                                                         target:self
+                                                       selector:@selector(updateTimer)
+                                                       userInfo:nil
+                                                        repeats:YES];
+        }
+    }else{
+        running = FALSE;
+        [_startStop setTitle:@"Start" forState:UIControlStateNormal];
+        [_startStop setEnabled:true];
+        [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
+        [_pauseResume setEnabled:false];
+        [stopTimer invalidate];
+        stopTimer = nil;
+    }
+}
+- (IBAction)pausePressed:(id)sender {
+    if (!paused) {
+        paused = true;
+        [_pauseResume setTitle:@"Resume" forState:UIControlStateNormal];
+        [_pauseResume setEnabled:true];
+        [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
+        [_startStop setEnabled:true];
+    }
+    else{
+        [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
+        [_pauseResume setEnabled:true];
+        [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
+        [_startStop setEnabled:false];
+        paused = false;
+        [stopTimer invalidate];
+        stopTimer = nil;
+        startDate = [NSDate date];
+        _secondsLabel.text = @"00:00:00";
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+-(void)updateTimer{
+    NSDate *currentDate = [NSDate date];
+    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];
+    NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
+    NSString *timeString=[dateFormatter stringFromDate:timerDate];
+    _secondsLabel.text = timeString;
 }
 
 @end
