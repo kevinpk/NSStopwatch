@@ -9,12 +9,11 @@
 #import "ViewController.h"
 
 @interface ViewController (){
-    NSTimer *stopTimer;
-    NSDate *startDate;
-    NSDate *pauseDate;
-    NSTimeInterval secondsBetween;
-    BOOL running;
-    BOOL paused;
+    NSTimer *clockTicks;
+    NSDate *start_date;
+    NSDate *pause_date;
+    BOOL isRunning;
+    BOOL isPaused;
 }
 @property (weak, nonatomic) IBOutlet UILabel *secondsLabel;
 @property (weak, nonatomic) IBOutlet UIButton *startStop;
@@ -33,63 +32,64 @@
     [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
     [_pauseResume setEnabled:false];
     _secondsLabel.text = @"00:00:00.00";
-    running = FALSE;
-    paused = false;
+    isRunning = FALSE;
+    isPaused = false;
 }
 - (IBAction)startPressed:(id)sender {
-    if(!running){
-        startDate = [NSDate date];
-        running = TRUE;
-        paused = false;
+    if(!isRunning){
+        isPaused = false;
+        start_date = [NSDate date];
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:false];
         [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
         [_pauseResume setEnabled:true];
-        if (stopTimer == nil) {
-            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
+        if (clockTicks == nil) {
+            clockTicks = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
                                                          target:self
                                                        selector:@selector(updateTimer)
                                                        userInfo:nil
                                                         repeats:YES];
         }
     }else{
-        running = FALSE;
+        [self showFinalTime];
         [_startStop setTitle:@"Start" forState:UIControlStateNormal];
         [_startStop setEnabled:true];
         [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
         [_pauseResume setEnabled:false];
-        [stopTimer invalidate];
-        stopTimer = nil;
+        [clockTicks invalidate];
+        clockTicks = nil;
     }
+    
+    isRunning = !isRunning;
 }
 - (IBAction)pausePressed:(id)sender {
-    if (!paused) {
-        paused = true;
+    if (!isPaused) {
         [_pauseResume setTitle:@"Resume" forState:UIControlStateNormal];
         [_pauseResume setEnabled:true];
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:true];
-        [stopTimer invalidate];
-        stopTimer = nil;
-        pauseDate = [NSDate date];
+        [clockTicks invalidate];
+        clockTicks = nil;
+        pause_date = [NSDate date];
     }
     else{
-        secondsBetween = [pauseDate timeIntervalSinceDate:startDate];
-        startDate = [NSDate dateWithTimeIntervalSinceNow:(-1)*secondsBetween];
+        NSTimeInterval secondsBetween = [pause_date timeIntervalSinceDate:start_date];
+        start_date = [NSDate dateWithTimeIntervalSinceNow:(-1)*secondsBetween];
         
         [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
         [_pauseResume setEnabled:true];
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:false];
-        paused = false;
-        if (stopTimer == nil) {
-            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
+        if (clockTicks == nil) {
+            clockTicks = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
                                                          target:self
                                                        selector:@selector(updateTimer)
                                                        userInfo:nil
                                                         repeats:YES];
         }
     }
+    
+    isPaused = !isPaused;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,13 +98,34 @@
 }
 -(void)updateTimer{
     NSDate *currentDate = [NSDate date];
-    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];
+    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:start_date];
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"HH:mm:ss:SS"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
     NSString *timeString=[dateFormatter stringFromDate:timerDate];
     _secondsLabel.text = timeString;
+}
+
+-(void)showFinalTime{
+    NSString *finalTime = _secondsLabel.text;
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Stopwatch Done"
+                                                                               message: finalTime
+                                                                        preferredStyle:UIAlertControllerStyleAlert                   ];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [alertController dismissViewControllerAnimated:YES completion:nil];
+                             _secondsLabel.text = @"00:00:00.00";
+                         }];
+    
+    [alertController addAction: ok];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 @end
