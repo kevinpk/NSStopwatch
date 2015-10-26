@@ -112,7 +112,7 @@
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Stopwatch Done"
                                                                                message: finalTime
-                                                                        preferredStyle:UIAlertControllerStyleAlert                   ];
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction* ok = [UIAlertAction
                          actionWithTitle:@"OK"
