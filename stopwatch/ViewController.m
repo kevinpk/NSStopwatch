@@ -11,6 +11,8 @@
 @interface ViewController (){
     NSTimer *stopTimer;
     NSDate *startDate;
+    NSDate *pauseDate;
+    NSTimeInterval secondsBetween;
     BOOL running;
     BOOL paused;
 }
@@ -30,7 +32,7 @@
     [_startStop setEnabled:true];
     [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
     [_pauseResume setEnabled:false];
-    _secondsLabel.text = @"00:00:00";
+    _secondsLabel.text = @"00:00:00.00";
     running = FALSE;
     paused = false;
 }
@@ -38,12 +40,13 @@
     if(!running){
         startDate = [NSDate date];
         running = TRUE;
+        paused = false;
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:false];
         [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
         [_pauseResume setEnabled:true];
         if (stopTimer == nil) {
-            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/10.0
+            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
                                                          target:self
                                                        selector:@selector(updateTimer)
                                                        userInfo:nil
@@ -66,17 +69,26 @@
         [_pauseResume setEnabled:true];
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:true];
+        [stopTimer invalidate];
+        stopTimer = nil;
+        pauseDate = [NSDate date];
     }
     else{
+        secondsBetween = [pauseDate timeIntervalSinceDate:startDate];
+        startDate = [NSDate dateWithTimeIntervalSinceNow:(-1)*secondsBetween];
+        
         [_pauseResume setTitle:@"Pause" forState:UIControlStateNormal];
         [_pauseResume setEnabled:true];
         [_startStop setTitle:@"Finish" forState:UIControlStateNormal];
         [_startStop setEnabled:false];
         paused = false;
-        [stopTimer invalidate];
-        stopTimer = nil;
-        startDate = [NSDate date];
-        _secondsLabel.text = @"00:00:00";
+        if (stopTimer == nil) {
+            stopTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0
+                                                         target:self
+                                                       selector:@selector(updateTimer)
+                                                       userInfo:nil
+                                                        repeats:YES];
+        }
     }
 }
 
@@ -89,7 +101,7 @@
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    [dateFormatter setDateFormat:@"HH:mm:ss:SS"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
     NSString *timeString=[dateFormatter stringFromDate:timerDate];
     _secondsLabel.text = timeString;
