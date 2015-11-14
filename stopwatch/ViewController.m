@@ -101,7 +101,7 @@
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:start_date];
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm:ss:SS"];
+    [dateFormatter setDateFormat:@"HH:mm:ss.SS"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
     NSString *timeString=[dateFormatter stringFromDate:timerDate];
     _secondsLabel.text = timeString;
